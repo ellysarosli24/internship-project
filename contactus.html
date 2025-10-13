@@ -1,0 +1,831 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Kami | Nadicom Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === CSS Variables === */
+        :root {
+            --primary: #555879;
+            --secondary: #98A1BC;
+            --accent: #DED3C4;
+            --light: #F4EBD3;
+            --white: #ffffff;
+            --dark: #333333;
+            --whatsapp: #25D366;
+        }
+
+        /* === Base Styles === */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* === Navigation === */
+        .navbar {
+            background-color: transparent;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar.scrolled .logo-text {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .navbar.scrolled .nav-links li a {
+            color: var(--primary);
+        }
+
+        /* Underline effect for all nav items */
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.3s;
+        }
+
+        .nav-links li a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .navbar.scrolled .hamburger {
+            color: var(--primary);
+        }
+
+        /* Mobile Menu Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 80px;
+                right: 0;
+                width: 280px;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                padding: 2rem 1.5rem;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                z-index: 999;
+                overflow-y: auto;
+                border-radius: 10px 0 0 10px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                width: 100%;
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links li a {
+                color: var(--primary) !important;
+                display: block;
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* === Hero Section === */
+        .hero {
+            padding: 10rem 0 5rem;
+            text-align: center;
+            position: relative;
+            color: white;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* === Main Content === */
+        .main-content {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        /* === Contact Info Section === */
+        .contact-info-section {
+            background-color: var(--white);
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .contact-info {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .contact-info h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-info p {
+            margin: 15px 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-info i {
+            width: 25px;
+            color: var(--primary);
+        }
+
+        /* === WhatsApp Button === */
+        .whatsapp-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        #whatsappBtn {
+            background: var(--whatsapp);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        #whatsappBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* === Map Section === */
+        .map-section {
+            margin: 40px 0;
+        }
+
+        .map-section h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .map-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-container iframe {
+            display: block;
+            width: 100%;
+            height: 400px;
+        }
+
+        /* === Popup Form === */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .popup-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1001;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .popup-form h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popup-form input {
+            padding: 12px;
+            width: 100%;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .popup-form input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .popup-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .close-popup:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        /* === Error Message === */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* === Footer (SAMA SEPERTI HOMEPAGE) === */
+        footer {
+            background-color: #3f4262 !important;
+            color: white !important;
+            padding: 4rem 0 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-img {
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .footer-logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-about p {
+            opacity: 0.8;
+            line-height: 1.6;
+            color: white !important;
+        }
+
+        .footer-links h4, .footer-newsletter h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            color: white !important;
+        }
+
+        .footer-links h4::after, .footer-newsletter h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent) !important;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-family: inherit;
+        }
+
+        .newsletter-form button {
+            padding: 10px 15px;
+            background: var(--accent);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--accent-light);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            color: white !important;
+            text-align: center;
+        }
+
+        /* === Responsive Design === */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-info-section {
+                padding: 2rem;
+            }
+            
+            .contact-info {
+                padding: 20px;
+            }
+            
+            .popup-form {
+                width: 85%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo-container">
+                <img src="{% static 'logo.png' %}" alt="Nadicom Logo" class="logo-img">
+                <a href="{% url 'homepage' %}" class="logo-text">NADICOM DIGITAL</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Utama</a></li>
+                <li><a href="{% url 'profile' %}">Profil Syarikat</a></li>
+                <li><a href="{% url 'service_list' %}">Servis</a></li>
+                <li><a href="{% url 'blog_list' %}">Blog</a></li>
+                <li><a href="{% url 'video_list' %}">Video</a></li>
+                <li><a href="{% url 'daftar_kursus' %}">Daftar Kursus</a></li>
+                <li><a href="{% url 'contactus' %}">Hubungi Kami</a></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Hubungi Nadicom Digital</h1>
+            <p>Kami sedia membantu transformasi digital perniagaan anda</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Contact Info Section -->
+        <section class="contact-info-section">
+            <h2 class="section-title">Maklumat Hubungan</h2>
+            
+            <div class="contact-info">
+                <h2><i class="fas fa-headset"></i> Hubungi Nadicom Digital</h2>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Alamat:</strong> Wisma MDT, Lot 3-2, Wakaf Bharu, Kelantan</p>
+                <p><i class="fas fa-phone"></i> <strong>Telefon:</strong> 09-719 1081 / 019-9699079</p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> info@nadicom.com</p>
+                <p><i class="fas fa-clock"></i> <strong>Waktu Operasi:</strong> Isnin-Jumaat (9pg-5ptg)</p>
+            </div>
+
+            <!-- WhatsApp Button -->
+            <div class="whatsapp-section">
+                <button id="whatsappBtn">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Kami Sekarang
+                </button>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="map-section">
+            <h3><i class="fas fa-map-marked-alt"></i> Lokasi Kami</h3>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.0688578621357!2d102.20192399999999!3d6.1214346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af0c60081f8b%3A0x2d173795dcbd48e0!2sNADICOM%20DIGITAL%20SDN%20BHD!5e0!3m2!1sen!2smy!4v1756192449653!5m2!1sen!2smy" 
+                width="600" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            </div>
+        </section>
+    </div>
+
+    <!-- WhatsApp Popup Form -->
+    <div class="popup-overlay" id="waOverlay"></div>
+    <div class="popup-form" id="waPopup">
+        <button class="close-popup" onclick="closePopup()">&times;</button>
+        <h3><i class="fab fa-whatsapp"></i> WhatsApp Promo</h3>
+        <p>Masukkan nombor WhatsApp anda untuk terima promosi:</p>
+        <input type="tel" id="phoneInput" placeholder="Contoh: 0123456789" required>
+        <div class="error-message" id="phoneError"></div>
+        <button onclick="validateAndSendWhatsApp()">Terima Promo</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="{% static 'logo.png' %}" alt="Nadicom Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">NADICOM DIGITAL</span>
+                    </div>
+                    <p>Penyedia perkhidmatan digital dan kursus latihan profesional yang terkemuka di Malaysia.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Pautan Pantas</h4>
+                    <ul>
+                        <li><a href="{% url 'homepage' %}"><i class="fas fa-chevron-right"></i> Utama</a></li>
+                        <li><a href="{% url 'profile' %}"><i class="fas fa-chevron-right"></i> Profil Syarikat</a></li>
+                        <li><a href="{% url 'service_list' %}"><i class="fas fa-chevron-right"></i> Servis</a></li>
+                        <li><a href="{% url 'blog_list' %}"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        <li><a href="{% url 'video_list' %}"><i class="fas fa-chevron-right"></i> Video</a></li>
+                        <li><a href="{% url 'daftar_kursus' %}"><i class="fas fa-chevron-right"></i> Daftar Kursus</a></li>
+                        <li><a href="{% url 'contactus' %}"><i class="fas fa-chevron-right"></i> Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-newsletter">
+                    <h4>Berita Terkini</h4>
+                    <p>Daftar untuk menerima maklumat terkini tentang kursus dan promosi.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Alamat email anda">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Nadicom Digital Sdn Bhd. Hak cipta terpelihara.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // WhatsApp Button Click
+        document.getElementById('whatsappBtn').addEventListener('click', function() {
+            document.getElementById('waPopup').style.display = 'block';
+            document.getElementById('waOverlay').style.display = 'block';
+        });
+
+        // Close Popup
+        function closePopup() {
+            document.getElementById('waPopup').style.display = 'none';
+            document.getElementById('waOverlay').style.display = 'none';
+            document.getElementById('phoneError').style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('waOverlay').addEventListener('click', closePopup);
+
+        // Validate phone number and send WhatsApp
+        function validateAndSendWhatsApp() {
+            const userPhone = document.getElementById('phoneInput').value;
+            const errorElement = document.getElementById('phoneError');
+            
+            if (!userPhone) {
+                errorElement.textContent = 'Sila masukkan nombor telefon';
+                errorElement.style.display = 'block';
+                return;
+            }
+
+            // Validate Malaysian phone number format
+            const phoneRegex = /^(\+?6?01)[0-46-9][0-9]{7,8}$/;
+            if (!phoneRegex.test(userPhone.replace(/[\s\-]/g, ''))) {
+                errorElement.textContent = 'Format nombor tidak sah. Contoh: 0123456789';
+                errorElement.style.display = 'block';
+                return;
+            }
+
+            // Clean the phone number (remove spaces, dashes, plus)
+            let cleanNumber = userPhone.replace(/[\s\-\+]/g, '');
+            
+            // Convert to international format (60xxxxxxxxx)
+            if (cleanNumber.startsWith('01')) {
+                cleanNumber = '60' + cleanNumber.substring(1);
+            } else if (cleanNumber.startsWith('1')) {
+                cleanNumber = '60' + cleanNumber;
+            } else if (!cleanNumber.startsWith('60')) {
+                cleanNumber = '60' + cleanNumber;
+            }
+
+            // Mesej promosi dari company
+            const promoMessage = "Terima kasih! Berikut promosi terkini dari Nadicom Digital:\n\n" +
+                                "🔹 *DISKAUN 20%* untuk SQL Accounting\n" +
+                                "🔹 *PERCUMA SETUP* untuk 10 pelanggan pertama\n" +
+                                "🔹 *KONSULTASI PERCUMA* untuk transformasi digital\n\n" +
+                                "Kami pakar dalam:\n" +
+                                "• SQL Accounting Software\n" +
+                                "• Sistem E-Invoice LHDN\n" +
+                                "• SQL Payroll & HR\n" +
+                                "• SQL Point of Sales (POS)\n\n" +
+                                "Hubungi kami di 09-719 1081 untuk maklumat lanjut!\n\n" +
+                                "*Nadicom Digital Sdn Bhd*\n" +
+                                "Wisma MDT, Wakaf Bharu, Kelantan";
+
+            // Create WhatsApp link
+            const whatsappLink = `https://api.whatsapp.com/send?phone=${cleanNumber}&text=${encodeURIComponent(promoMessage)}`;
+            
+            // Open WhatsApp link
+            window.open(whatsappLink, '_blank');
+            
+            // Tutup popup
+            closePopup();
+            
+            // Kosongkan input
+            document.getElementById('phoneInput').value = '';
+        }
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                // Close mobile menu if open
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // Initialize - Pastikan popup TIDAK automatik terbuka
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pastikan popup ditutup ketika page load
+            closePopup();
+        });
+    </script>
+</body>
+</html>

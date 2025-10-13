@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resit Pembayaran | Nadicom Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === CSS Variables === */
+        :root {
+            --primary: #555879;
+            --primary-light: #6d72a1;
+            --secondary: #98A1BC;
+            --accent: #DED3C4;
+            --light: #F4EBD3;
+            --white: #ffffff;
+            --dark: #333333;
+            --success: #4CAF50;
+            --border: #e0e0e0;
+        }
+
+        /* === Base Styles === */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* === Receipt Styles === */
+        .receipt-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+            animation: bounce 0.6s;
+        }
+
+        .receipt-header h1 {
+            margin: 0.5rem 0;
+            font-size: 2rem;
+        }
+
+        .receipt-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .receipt-details {
+            padding: 2rem;
+        }
+
+        .receipt-details h3 {
+            color: var(--primary);
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row span:first-child {
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .detail-row span:last-child {
+            text-align: right;
+        }
+
+        .receipt-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0 2rem 2rem;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-download {
+            background: var(--primary);
+            color: var(--white);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-download:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-back {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-back:hover {
+            background: var(--light);
+        }
+
+        /* Animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: none;
+            }
+            .receipt-container {
+                box-shadow: none;
+                max-width: 100%;
+                margin: 0;
+            }
+            .receipt-actions {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .receipt-header h1 {
+                font-size: 1.5rem;
+            }
+            .detail-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .detail-row span:last-child {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h1>Pembayaran Berjaya!</h1>
+                <p>Terima kasih atas pembayaran anda</p>
+            </div>
+            
+            <div class="receipt-details">
+                <h3>Resit Pembayaran</h3>
+                <div class="detail-row">
+                    <span>No. Rujukan:</span>
+                    <span>NCM{{ transaction_id }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Perkhidmatan:</span>
+                    <span>{{ service.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Jumlah Bayaran:</span>
+                    <span>RM{{ service.price }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Kaedah Bayaran:</span>
+                    <span>{{ payment_method }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Tarikh/Masa:</span>
+                    <span>{{ payment_date|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Status:</span>
+                    <span style="color: var(--success); font-weight: 500;">
+                        <i class="fas fa-check-circle"></i> Berjaya
+                    </span>
+                </div>
+            </div>
+            
+            <div class="receipt-actions">
+                <a href="{% url 'download_invoice' transaction_id %}" class="btn btn-download">
+                    <i class="fas fa-download"></i> Muat Turun Invois
+                </a>
+                <a href="{% url 'service_list' %}" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Servis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto trigger download if ?download=true in URL
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if print mode requested
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('print')) {
+                window.print();
+            }
+
+            // Add click animation to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                });
+            });
+
+            // Save receipt data to localStorage for offline access
+            const receiptData = {
+                transactionId: "{{ transaction_id }}",
+                service: "{{ service.name }}",
+                amount: "{{ service.price }}",
+                date: "{{ payment_date|date:'d/m/Y H:i' }}"
+            };
+            localStorage.setItem('lastReceipt', JSON.stringify(receiptData));
+        });
+
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,951 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Nadicom Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === CSS Variables (Sama dengan Homepage) === */
+        :root {
+            --primary: #555879;
+            --secondary: #98A1BC;
+            --accent: #DED3C4;
+            --light: #F4EBD3;
+            --white: #ffffff;
+            --dark: #333333;
+            --primary-light: #6d72a1;
+            --border: #e0e0e0;
+            --primary-dark: #3f4262;
+        }
+
+        /* === Base Styles (Sama dengan Homepage) === */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--primary);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* === Navigation (Sama Persis Homepage) === */
+        .navbar {
+            background-color: transparent;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .navbar.scrolled .logo-text {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .navbar.scrolled .nav-links li a {
+            color: var(--primary);
+        }
+
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.3s;
+        }
+
+        .nav-links li a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button-nav {
+            background-color: var(--primary);
+            color: white !important;
+            padding: 0.6rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 1.5rem;
+            border: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .cta-button-nav:hover {
+            background-color: transparent;
+            color: var(--primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar.scrolled .cta-button-nav {
+            background-color: var(--primary);
+            color: white !important;
+        }
+
+        .navbar.scrolled .cta-button-nav:hover {
+            background-color: transparent;
+            color: var(--primary) !important;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            color:  var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .navbar.scrolled .hamburger {
+            color: var(--primary);
+        }
+
+        /* === Main Content Styles === */
+        .main-content {
+            padding: 8rem 0 3rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        /* === Blog Detail Layout === */
+        .blog-detail-layout {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .blog-content {
+            flex: 2;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .blog-sidebar {
+            flex: 1;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .blog-meta span {
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .blog-meta i {
+            margin-right: 0.5rem;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        /* TAMBAH: Placeholder untuk gambar kosong */
+        .image-placeholder {
+            width: 100%;
+            height: 400px;
+            background-color: var(--accent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .blog-body {
+            line-height: 1.8;
+        }
+
+        .blog-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-body h2, .blog-body h3 {
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+        }
+
+        .blog-body blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--secondary);
+        }
+
+        /* === Social Sharing === */
+        .social-sharing {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .share-btn {
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .share-btn.facebook { background: #3b5998; }
+        .share-btn.twitter { background: #1da1f2; }
+        .share-btn.linkedin { background: #0077b5; }
+        .share-btn.whatsapp { background: #25d366; }
+
+        /* === Sidebar Styles === */
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            margin-top: 0;
+            color: var(--primary);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* === Search Form === */
+        .search-form {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px 0 0 4px;
+            font-family: inherit;
+        }
+
+        .search-btn {
+            padding: 10px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .recent-post {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recent-post:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .recent-post-img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+
+        /* TAMBAH: Placeholder untuk recent post */
+        .recent-post-placeholder {
+            width: 80px;
+            height: 60px;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .recent-post-content h4 {
+            margin: 0 0 0.5rem;
+            font-size: 1rem;
+        }
+
+        .recent-post-content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .recent-post-content a:hover {
+            color: var(--primary-light);
+        }
+
+        .recent-post-date {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .categories-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .categories-list li {
+            margin: 0;
+            padding: 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .categories-list li:last-child {
+            border-bottom: none;
+        }
+
+        .category-item {
+            display: block;
+            padding: 12px 15px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .category-item:hover {
+            color: var(--primary);
+            background-color: #f8f9fa;
+            padding-left: 20px;
+        }
+
+        /* === Related Posts === */
+        .related-posts {
+            margin-top: 3rem;
+        }
+
+        .related-posts h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .related-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .related-content {
+            padding: 1.5rem;
+        }
+
+        .related-content h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .related-content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .related-content a:hover {
+            color: var(--primary-light);
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 1rem;
+            text-decoration: none;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* === Footer (SAMA SEPERTI HOMEPAGE) === */
+        footer {
+            background-color: #3f4262 !important;
+            color: white !important;
+            padding: 4rem 0 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-img {
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .footer-logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-about p {
+            opacity: 0.8;
+            line-height: 1.6;
+            color: white !important;
+        }
+
+        .footer-links h4, .footer-newsletter h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            color: white !important;
+        }
+
+        .footer-links h4::after, .footer-newsletter h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent) !important;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-family: inherit;
+        }
+
+        .newsletter-form button {
+            padding: 10px 15px;
+            background: var(--accent);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--accent-light);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            color: white !important;
+            text-align: center;
+        }
+
+        /* === Responsive Design (Sama dengan Homepage) === */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 80px;
+                right: 0;
+                width: 280px;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                padding: 2rem 1.5rem;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                z-index: 999;
+                overflow-y: auto;
+                border-radius: 10px 0 0 10px;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-links li {
+                margin: 0;
+                padding: 0.8rem 0;
+                border-bottom: 1px solid #eee;
+                width: 100%;
+            }
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+            .nav-links li a {
+                color: var(--primary) !important;
+                display: block;
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+            .cta-button-nav {
+                margin: 0.5rem 0 0;
+                width: 100%;
+                text-align: center;
+            }
+            .hamburger {
+                display: block;
+            }
+            .blog-detail-layout {
+                flex-direction: column;
+            }
+            .blog-sidebar {
+                position: static;
+            }
+            .social-sharing {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (Sama Persis Homepage) -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo-container">
+                <img src="{% static 'logo.png' %}" alt="Nadicom Logo" class="logo-img">
+                <a href="/" class="logo-text">NADICOM DIGITAL</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Utama</a></li>
+                <li><a href="{% url 'profile' %}">Profil Syarikat</a></li>
+                <li><a href="{% url 'service_list' %}">Servis</a></li>
+                <li><a href="{% url 'blog_list' %}">Blog</a></li>
+                <li><a href="{% url 'video_list' %}">Video</a></li>
+                <li><a href="{% url 'daftar_kursus' %}">Daftar Kursus</a></li>
+                <li><a href="{% url 'contactus' %}">Hubungi Kami</a></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">{{ blog_post.title }}</h1>
+            
+            <div class="blog-detail-layout">
+                <!-- Blog Content -->
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> {{ blog_post.published_date|date:"d M Y" }}</span>
+                        <span><i class="far fa-user"></i> {{ blog_post.author }}</span>
+                        <span><i class="far fa-folder"></i> 
+                            {% for category in blog_post.categories.all %}
+                                {{ category.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                    
+                    <!-- UBAH: Handle gambar optional -->
+                    {% if blog_post.featured_image %}
+                        <img src="{{ blog_post.featured_image.url }}" alt="{{ blog_post.title }}" class="blog-image">
+                    {% else %}
+                        <div class="image-placeholder">
+                            <i class="fas fa-image"></i>
+                            <p>Tiada gambar disediakan</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="blog-body">
+                        {{ blog_post.content|safe }}
+                    </div>
+
+                    <!-- TAMBAH: Social Sharing Buttons -->
+                    <div class="social-sharing">
+                        <span>Kongsi artikel ini:</span>
+                        <a href="#" class="share-btn facebook" data-platform="facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <a href="#" class="share-btn twitter" data-platform="twitter">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a href="#" class="share-btn linkedin" data-platform="linkedin">
+                            <i class="fab fa-linkedin-in"></i> LinkedIn
+                        </a>
+                        <a href="#" class="share-btn whatsapp" data-platform="whatsapp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Blog Sidebar -->
+                <div class="blog-sidebar">
+                    <!-- TAMBAH: Search Form -->
+                    <div class="sidebar-section">
+                        <h3>Cari Artikel</h3>
+                        <form action="{% url 'blog_search' %}" method="get" class="search-form">
+                            <input type="text" name="q" placeholder="Cari artikel..." class="search-input" required>
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Post Terkini</h3>
+                        {% for post in recent_posts %}
+                        <div class="recent-post">
+                            <!-- UBAH: Handle gambar optional untuk recent posts -->
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="recent-post-img">
+                            {% else %}
+                                <div class="recent-post-placeholder">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            {% endif %}
+                            <div class="recent-post-content">
+                                <h4><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h4>
+                                <div class="recent-post-date">{{ post.published_date|date:"d M Y" }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h3>Kategori</h3>
+                        <ul class="categories-list">
+                            {% for category in categories %}
+                            <li>
+                                <a class="category-item" href="{% url 'blog_category' category.slug %}">
+                                    {{ category.name }}
+                                </a>
+                            </li>
+                            {% empty %}
+                            <li class="category-item">Tiada kategori</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related Posts -->
+            <div class="related-posts">
+                <h2>Artikel Berkaitan</h2>
+                <div class="related-grid">
+                    {% for post in related_posts %}
+                    <div class="related-card">
+                        <!-- UBAH: Handle gambar optional untuk related posts -->
+                        {% if post.featured_image %}
+                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="related-img">
+                        {% endif %}
+                        <div class="related-content">
+                            <h3><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h3>
+                            <p>{{ post.excerpt|truncatewords:20 }}</p>
+                            <a href="{% url 'blog_detail' post.slug %}" class="read-more">Baca selanjutnya</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (Sama dengan Homepage) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <img src="{% static 'logo.png' %}" alt="Nadicom Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">NADICOM DIGITAL</span>
+                    </div>
+                    <p>Penyedia perkhidmatan digital dan kursus latihan profesional yang terkemuka di Malaysia.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Pautan Pantas</h4>
+                    <ul>
+                        <li><a href="{% url 'homepage' %}"><i class="fas fa-chevron-right"></i> Utama</a></li>
+                        <li><a href="{% url 'profile' %}"><i class="fas fa-chevron-right"></i> Profil Syarikat</a></li>
+                        <li><a href="{% url 'service_list' %}"><i class="fas fa-chevron-right"></i> Servis</a></li>
+                        <li><a href="{% url 'blog_list' %}"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        <li><a href="{% url 'video_list' %}"><i class="fas fa-chevron-right"></i> Video</a></li>
+                        <li><a href="{% url 'daftar_kursus' %}"><i class="fas fa-chevron-right"></i> Daftar Kursus</a></li>
+                        <li><a href="{% url 'contactus' %}"><i class="fas fa-chevron-right"></i> Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-newsletter">
+                    <h4>Berita Terkini</h4>
+                    <p>Daftar untuk menerima maklumat terkini tentang kursus dan promosi.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Alamat email anda">
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Nadicom Digital Sdn Bhd. Hak cipta terpelihara.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // Animation on scroll for related posts
+        const animateOnScroll = () => {
+            const cards = document.querySelectorAll('.related-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (cardTop < windowHeight - 100) {
+                    card.style.opacity = 1;
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // Initialize animations
+        document.querySelectorAll('.related-card').forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+        });
+
+        // Social Sharing functionality
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const currentUrl = encodeURIComponent(window.location.href);
+                const currentTitle = encodeURIComponent(document.title);
+                const platform = this.getAttribute('data-platform');
+                
+                let shareUrl;
+                
+                switch(platform) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+                        break;
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?text=${currentTitle}&url=${currentUrl}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://wa.me/?text=${currentTitle}%20${currentUrl}`;
+                        break;
+                }
+                
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=400');
+                }
+            });
+        });
+
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+</html>

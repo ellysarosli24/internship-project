@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <!-- Same head content as your service_list.html -->
+    <style>
+        /* Additional styles for payment page */
+        .payment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-details {
+            margin-bottom: 2rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .payment-methods {
+            margin: 2rem 0;
+        }
+        
+        .method {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .method:hover {
+            border-color: var(--primary);
+        }
+        
+        .method.selected {
+            border-color: var(--primary);
+            background-color: rgba(85, 88, 121, 0.05);
+        }
+        
+        .method img {
+            width: 50px;
+            margin-right: 1rem;
+        }
+        
+        .confirm-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .confirm-btn:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Same navigation as service_list.html -->
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="payment-container">
+                <div class="payment-header">
+                    <h2>Pembayaran Untuk</h2>
+                    <h1>{{ service.name }}</h1>
+                    <div class="price">RM{{ service.price }}</div>
+                </div>
+                
+                <div class="payment-details">
+                    <h3>Butiran Pembayaran</h3>
+                    <div class="detail-row">
+                        <span>Perkhidmatan:</span>
+                        <span>{{ service.name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Kategori:</span>
+                        <span>{{ service.get_category_display }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Jumlah:</span>
+                        <span>RM{{ service.price }}</span>
+                    </div>
+                    <div class="detail-row" style="font-weight: bold;">
+                        <span>Jumlah Bayaran:</span>
+                        <span>RM{{ service.price }}</span>
+                    </div>
+                </div>
+                
+                <div class="payment-methods">
+                    <h3>Pilih Kaedah Pembayaran</h3>
+                    
+                    <div class="method selected" data-method="fpx">
+                        <img src="{% static 'fpx-logo.png' %}" alt="FPX">
+                        <div>
+                            <h4>FPX Online Banking</h4>
+                            <p>Maybank2U, CIMB Clicks, RHB Now, etc.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="method" data-method="card">
+                        <img src="{% static 'card-logo.png' %}" alt="Credit Card">
+                        <div>
+                            <h4>Kad Kredit/Debit</h4>
+                            <p>Visa, Mastercard, American Express</p>
+                        </div>
+                    </div>
+                    
+                    <div class="method" data-method="touchngo">
+                        <img src="{% static 'tng-logo.png' %}" alt="Touch 'n Go">
+                        <div>
+                            <h4>Touch 'n Go eWallet</h4>
+                            <p>Bayar menggunakan TNG eWallet</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="confirm-btn" id="payButton">
+                    <i class="fas fa-lock"></i> Sahkan & Bayar Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Same footer as service_list.html -->
+    
+    <script>
+        // Payment method selection
+        document.querySelectorAll('.method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.method').forEach(m => {
+                    m.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // Payment confirmation
+        document.getElementById('payButton').addEventListener('click', function() {
+            const selectedMethod = document.querySelector('.method.selected').dataset.method;
+            
+            // Show loading state
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses Pembayaran...';
+            this.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Redirect to receipt page on success
+                window.location.href = "{% url 'payment_receipt' service.id %}";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
